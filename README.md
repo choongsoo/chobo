@@ -14,4 +14,4 @@ It is written in [Python 3](https://www.python.org/), and uses the [pygame](http
 * Use of any system fonts
 * Sound/music files and their playback
 
-The full documentation is available in the [doc](doc/index.html) folder.
+The full documentation is available in the [doc](doc/) folder.
