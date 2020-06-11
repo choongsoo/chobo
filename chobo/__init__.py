@@ -53,7 +53,6 @@ class window:
     """Simple graphical display."""
 
     def __init__(self, width=None, height=None, *extra):
-
         command = "chobo.window(width, height)"
 
         # Argument existence
@@ -607,6 +606,48 @@ class window:
 
         self.shapes.remove(shape)
 
+    def ovalPoint(self, pos=None, width=None, height=None, angle=None, *extra):
+        """Compute a point at an angle on an oval with the given position, width, and height."""
+        command = "ovalPoint(centerPosition, width, height, angle)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if pos is None or width is None or height is None or angle is None:
+            return system.missing(command)
+
+        # Argument types
+        try:
+            x, y = pos
+            x = int(x)
+            y = int(y)
+        except ValueError:
+            return system.invalid("invalid location", pos)
+
+        try:
+            width = max(1, int(width / 2))
+            if width <= 0:
+                raise ValueError
+        except ValueError:
+            return system.invalid("invalid width", width)
+
+        try:
+            height = max(1, int(height / 2))
+            if height <= 0:
+                raise ValueError
+        except ValueError:
+            return system.invalid("invalid height", height)
+
+        try:
+            angle = float(angle)
+        except ValueError:
+            return system.invalid("invalid angle", angle)
+
+        # convert from degrees to radians
+        angle = math.radians(angle)
+
+        return (x + width * math.sin(angle) + width, y - height * math.cos(angle) + height)
+
 class windowshape:
     def __init__(self):
         self.rect = None
@@ -1083,7 +1124,7 @@ class text(pointshape):
         self.rect = sys.window.screen.blit(self.text, (self.x, self.y))
 
 class soundfx():
-    """An Sound FX object"""
+    """A sound FX object"""
 
     def __init__(self, filename):
         self.soundfx = pygame.mixer.Sound(filename)
@@ -1092,89 +1133,57 @@ class soundfx():
         self.soundfx.play()
 
 class music():
-    """An Sound FX object"""
-    currentMusic = None
+    """A music object"""
+    __currentMusic = None
 
     def __init__(self, filename):
         self.music = filename
         self.volume = pygame.mixer.music.get_volume()
+        self.playing = False
 
     def play(self):
-        if music.currentMusic is not self:
+        if music.__currentMusic is not self:
+            if music.__currentMusic is not None:
+                music.__currentMusic.playing = False
             try:
                 pygame.mixer.music.unload() # works only with Pygame 2.0+
             except:
                 pass
             pygame.mixer.music.load(self.music)
             pygame.mixer.music.set_volume(self.volume)
-            music.currentMusic = self
+            music.__currentMusic = self
+            self.playing = True
         pygame.mixer.music.play()
 
     def stop(self):
-        if music.currentMusic is self:
+        if music.__currentMusic is self:
             pygame.mixer.music.stop()
+            self.playing = False
 
     def pause(self):
-        if music.currentMusic is self:
+        if music.__currentMusic is self:
             pygame.mixer.music.pause()
+            self.playing = False
 
     def unpause(self):
-        if music.currentMusic is self:
+        if music.__currentMusic is self:
             pygame.mixer.music.unpause()
+            self.playing = True
 
     def isPlaying(self):
-        if music.currentMusic is self:
-            return pygame.mixer.music.get_busy()
+        if music.__currentMusic is self:
+            if pygame.mixer.music.get_busy():
+                return self.playing
         return False
 
     def setVolume(self, volume):
         if volume < 0 or volume > 1.0:
             return system.invalid("volume", volume)
         self.volume = volume
-        if music.currentMusic is self:
+        if music.__currentMusic is self:
             pygame.mixer.music.set_volume(self.volume)
 
     def getVolume(self):
         return self.volume
 
-def ovalPoint(pos=None, width=None, height=None, angle=None, *extra):
-    """Compute a point at an angle on an oval with the given position, width, and height."""
-    command = "ovalPoint(centerPosition, width, height, angle)"
 
-    # Argument existence
-    if len(extra) > 0:
-        return system.extra(command)
-    if pos is None or width is None or height is None or angle is None:
-        return system.missing(command)
-
-    # Argument types
-    try:
-        x, y = pos
-        x = int(x)
-        y = int(y)
-    except ValueError:
-        return system.invalid("invalid location", pos)
-
-    try:
-        width = max(1, int(width / 2))
-        if width <= 0:
-            raise ValueError
-    except ValueError:
-        return system.invalid("invalid width", width)
-
-    try:
-        height = max(1, int(height / 2))
-        if height <= 0:
-            raise ValueError
-    except ValueError:
-        return system.invalid("invalid height", height)
-
-    try:
-        angle = float(angle)
-    except ValueError:
-        return system.invalid("invalid angle", angle)
-
-    # convert from degrees to radians
-    angle = math.radians(angle)
-
-    return (x + width * math.sin(angle) + width, y - height * math.cos(angle) + height)
