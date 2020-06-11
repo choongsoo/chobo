@@ -52,6 +52,10 @@ You can add geometric shapes to a window.
 
 `line = window.line((x1, y1), (x2, y2), ...)` (See more about [lines](#Lines))
 
+You can compute a position around an oval. (This does not draw the oval.)
+
+`window.ovalPoint((x, y), width, height, angle)` (The angle is in degrees, and measured clockwise from the north direction.)
+
 You can add more complex shapes to a window.
 
 `text = window.text((x, y), message)` (See more about [text](#Text))
