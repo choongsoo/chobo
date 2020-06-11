@@ -2,7 +2,8 @@
 | --- | --- | --- |
 | | A Python package for graphical displays | |
 
-###Welcome
+### Welcome
+
 The chobo module is a forked version of the [intrographics](http://myslu.stlawu.edu/~ltorrey/intrographics/) module developed by [Dr. Lisa Torrey](http://myslu.stlawu.edu/~ltorrey/).
 
 It allows you to create graphical displays in your Python 3 programs.
@@ -17,7 +18,7 @@ It is written in [Python 3](https://www.python.org/), and uses the [pygame](http
 * Use of any system fonts
 * Sound/music files and their playback
 
-###Installation
+### Installation
 
 The best way to install chobo on your system is by using pip, the Python package management system.
 
@@ -25,7 +26,7 @@ The best way to install chobo on your system is by using pip, the Python package
 
 [How to use pip to install packages in PyCharm](https://www.jetbrains.com/help/pycharm/installing-uninstalling-and-upgrading-packages.html)
 
-###Windows
+### Windows
 
 A window is like a drawing canvas. It has a coordinate system with an x-axis and a y-axis whose units are pixels. The point (0,0) is in the top left corner. The x-values increase towards the right, and the y-values increase towards the bottom.
 
@@ -87,7 +88,7 @@ window.width window.height (The window dimensions)
 
 You can assign other attributes of your own, to use however you wish.
 
-###Rectangles
+### Rectangles
 
 Once you have added a rectangle shape to a window, you can manipulate it as follows.
 
