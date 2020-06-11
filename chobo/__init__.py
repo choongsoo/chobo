@@ -290,7 +290,6 @@ class window:
 
             # call all the timer functions
             for interval in dict(self.timerFunctions):
-#                print(self.tick , self.timerFunctions[interval]["lastRun"] ,self.tick - self.timerFunctions[interval]["lastRun"] )
                 if self.tick - self.timerFunctions[interval]["lastRun"] > interval:
                     self.timerFunctions[interval]["lastRun"] = self.tick
                     for aFunction in self.timerFunctions[interval]["functions"][:]:
@@ -903,7 +902,7 @@ class arc(polygon):
             points.append((x + a, y + b))
 
         for i in range(beginAngle, beginAngle + arcAngle + 1):
-            points.append(ovalPoint( (x, y), width, height, i))
+            points.append(sys.window.ovalPoint( (x, y), width, height, i))
 
         # points = [(v + x + a, w + y + b) for (v, w) in points]
 
