@@ -38,7 +38,7 @@ You can create, open, and close a window.
 
 You can give the window a background color.
 
-`window.fill(color) (See more about colors)`
+`window.fill(color)` (See more about [colors](#Fonts-and-Colors))
 
 You can add geometric shapes to a window.
 
@@ -100,8 +100,6 @@ Some window attributes are accessible (but not assignable).
 
 `window.width` `window.height` (The window dimensions)
 
-You can assign other attributes of your own, to use however you wish.
-
 ### Rectangles
 
 Once you have added a rectangle shape to a window, you can manipulate it as follows.
@@ -116,11 +114,11 @@ You can change the width or color of its border.
 
 You can change its location and size.
 
-`rectangle.relocate( (x, y) )`
+`rectangle.relocate( (x, y) )` (The shape is relocated to (x, y).)
 
-`rectangle.scale(horizontalScale, verticalScale)`
+`rectangle.scale(horizontalScale, verticalScale)` (horizontalScale and verticalScale are in decimal (for example, 0.5 for 50%).)
  
-`rectangle.move(dx, dy)`
+`rectangle.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
 
 You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
 
@@ -138,8 +136,6 @@ Some of its attributes are accessible (but not assignable).
 
 `rectangle.top` `rectangle.bottom` (Boundary y-values)
 
-You can assign other attributes of your own, to use however you wish.
-
 ### Ovals
 
 Once you have added an oval shape to a window, you can manipulate it as follows.
@@ -154,11 +150,11 @@ You can change the width or color of its border.
 
 You can change its location and size.
 
-`oval.relocate( (x, y) )`
+`oval.relocate( (x, y) )` (The shape is relocated to (x, y).)
 
-`oval.scale(horizontalScale, verticalScale)`
+`oval.scale(horizontalScale, verticalScale)` (horizontalScale and verticalScale are in decimal (for example, 0.5 for 50%).)
 
-`oval.move(dx, dy)`
+`oval.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
 
 You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
 
@@ -176,7 +172,181 @@ Some of its attributes are accessible (but not assignable).
 
 `oval.top oval.bottom` (Boundary y-values)
 
-You can assign other attributes of your own, to use however you wish.
+### Polygons
+
+Once you have added a polygon shape to a window, you can manipulate it as follows.
+
+You can give it a color.
+
+`polygon.fill(color)` (See more about [colors](#Fonts-and-Colors))
+
+You can change the width or color of its border.
+
+`polygon.border(width, color)` (See more about [colors](#Fonts-and-Colors))
+
+You can change its location and size.
+
+`polygon.relocate( (x, y) )` (The shape is relocated to (x, y).)
+
+`polygon.scale(horizontalScale, verticalScale)` (horizontalScale and verticalScale are in decimal (for example, 0.5 for 50%).)
+
+`polygon.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
+
+You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
+
+`polygon.rotate(angle)`
+
+You can ask whether it overlaps with another shape in the window.
+
+`if polygon.overlaps(shape):`
+
+Some of its attributes are accessible (but not assignable).
+
+`polygon.width` `polygon.height` (Dimensions of a bounding box)
+`polygon.left` `polygon.right` (Boundary x-values)
+`polygon.top` `polygon.bottom` (Boundary y-values)
+
+### Lines
+
+Once you have added a line shape to a window, you can manipulate it as follows.
+
+You can change its color and width.
+
+`line.fill(color)` (See more about [colors](#Fonts-and-Colors))
+
+`line.border(width)`
+
+You can change its location.
+
+`line.relocate( (x, y) )` (The shape is relocated to (x, y).)
+
+`line.scale(horizontalScale, verticalScale)` (horizontalScale and verticalScale are in decimal (for example, 0.5 for 50%).)
+
+`line.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
+
+You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
+
+`line.rotate(angle)`
+
+You can ask whether it overlaps with another shape in the window.
+
+`if line.overlaps(shape):`
+
+Some of its attributes are accessible (but not assignable).
+
+`line.width` `line.height` (Dimensions of a bounding box)
+
+`line.left` `line.right` (Boundary x-values)
+
+`line.top` `line.bottom` (Boundary y-values)
+
+### Text
+
+Once you have added text to a window, you can manipulate it as follows.
+
+You can change its font, size, and color.
+
+`text.format(font, size, color)` (See more about [fonts and colors](#Fonts-and-Colors))
+
+You can change its location.
+
+`text.relocate( (x, y) )`  (The shape is relocated to (x, y).)
+
+`text.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
+
+You can read and change its contents.
+
+`message = text.read(datatype)` (It parses the message of the text shape as the given data type (`int`, `str`, etc.).)
+
+`text.rewrite(message)` (It changes the message of the text shape.)
+
+You can ask whether it overlaps with another shape in the window.
+
+`if text.overlaps(shape):`
+
+Some of its attributes are accessible (but not assignable).
+
+`text.width` `text.height` (Dimensions)
+
+`text.left` `text.right` (Boundary x-values)
+
+`text.top` `text.bottom` (Boundary y-values)
+
+### Images
+
+Images have internal coordinate systems just like windows. The top left corner is column 0, row 0. Pixel x-values increase towards the right, and pixel y-values increase towards the bottom.
+
+You can inspect or change the color at a particular pixel in the image.
+
+`(r,g,b) = image.getColor( (x, y) )`
+
+`image.setColor( (x, y), color)`  (See more about [colors](#Fonts-and-Colors))
+
+You can change the location of an image within the window.
+
+`image.relocate( (x, y) )` (The shape is relocated to (x, y).)
+
+`image.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
+
+You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
+
+`image.rotate(angle)`
+
+You can ask whether it overlaps with another shape in the window.
+
+`if image.overlaps(shape):`
+
+You can save an image to a new file.
+
+`image.saveAs(filename)`
+
+Some image attributes are accessible (but not assignable).
+
+`image.width` `image.height` (Dimensions)
+
+`image.left` `image.right` (Boundary x-values)
+
+`image.top` `image.bottom` (Boundary y-values)
+
+### SoundFX
+
+Once you have added a sound effect to a window, you can manipulate it as follows.
+
+You can play the sound effect.
+
+`soundfx.play()` 
+
+### Music
+
+Once you have added music to a window, you can manipulate it as follows.
+
+You can play the music. NOTE: You can only play one music file at a time. If you play different music while playing another, the previously playing music will stop, and the new one will play.
+
+`music.play()`
+
+You can stop the music.
+
+`music.stop()`
+
+You can pause the music. 
+
+`music.pause()` (If you play another music while this music is paused, the paused position will be lost and you need to use play (not unpause) this music from the beginning again.)
+
+You can unpause/resume the music.
+
+`music.unpause()` (Unpausing music only works if you have not played another music while paused.)
+
+You can check if the music is playing (`True` or `False`).
+
+`music.isPlaying()`
+
+You can get the volume (0.0 mute, 1.0 loudest) of the music.
+
+`music.getVolume()`
+
+You can set the volume  (0.0 mute, 1.0 loudest) of the music.
+
+`music.setVolume(volume)` 
 
 ### Fonts and colors
 
