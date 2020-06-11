@@ -55,7 +55,9 @@ You can add geometric shapes to a window.
 You can add more complex shapes to a window.
 
 `text = window.text((x, y), message)` (See more about [text](#Text))
+
 `image = window.image((x, y), filename)` (See more about [images](#Images))
+
 `emptyimage = window.emptyimage((x, y), width, height)` (See more about [images](#Images))
 
 You can remove a shape from a window.
@@ -106,11 +108,11 @@ Once you have added a rectangle shape to a window, you can manipulate it as foll
 
 You can give it a color.
 
-`rectangle.fill(color)` (See more about [colors](#Colors))
+`rectangle.fill(color)` (See more about [colors](#Fonts-and-Colors))
 
 You can change the width or color of its border.
 
-`rectangle.border(width, color)` (See more about [colors](#Colors))
+`rectangle.border(width, color)` (See more about [colors](#Fonts-and-Colors))
 
 You can change its location and size.
 
@@ -131,7 +133,61 @@ You can ask whether it overlaps with another shape in the window.
 Some of its attributes are accessible (but not assignable).
 
 `rectangle.width` `rectangle.height` (Dimensions)
+
 `rectangle.left` `rectangle.right` (Boundary x-values)
+
 `rectangle.top` `rectangle.bottom` (Boundary y-values)
 
 You can assign other attributes of your own, to use however you wish.
+
+### Ovals
+
+Once you have added an oval shape to a window, you can manipulate it as follows.
+
+You can give it a color.
+
+`oval.fill(color)` (See more about [colors](#Fonts-and-Colors))
+
+You can change the width or color of its border.
+
+`oval.border(width, color)` (See more about [colors](#Fonts-and-Colors))
+
+You can change its location and size.
+
+`oval.relocate( (x, y) )`
+
+`oval.scale(horizontalScale, verticalScale)`
+
+`oval.move(dx, dy)`
+
+You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
+
+`oval.rotate(angle)`
+
+You can ask whether it overlaps with another shape in the window.
+
+`if oval.overlaps(shape):`
+
+Some of its attributes are accessible (but not assignable).
+
+`oval.width oval.height` (Dimensions of a bounding box)
+
+`oval.left oval.right` (Boundary x-values)
+
+`oval.top oval.bottom` (Boundary y-values)
+
+You can assign other attributes of your own, to use however you wish.
+
+### Fonts and colors
+
+Different fonts many be available on different computers, but these three are guaranteed:
+
+`Helvetica`
+`Courier`
+`Times`
+
+Any color can be constructed in RGB format:
+
+`color = (r, g, b)`
+
+[HTML Color Codes](https://htmlcolorcodes.com/) website can help you find out the amounts of red, green, and blue for the color of your choice visually.
