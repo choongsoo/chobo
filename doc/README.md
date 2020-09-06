@@ -46,7 +46,7 @@ You can add geometric shapes to a window.
 
 `oval = window.oval((x, y), width, height)` (See more about [ovals](#Ovals))
 
-`arc = window.arc((x, y), width, height, beginAngle, arcAngle)` (See more about [arcs](#Arcs))
+`arc = window.arc((x, y), width, height, beginAngle, arcAngle)` (beginAngle is measured clockwise in degrees from the north direction. arcAngle is how wide the arc is in degrees. See more about [arcs](#Arcs))
 
 `polygon = window.polygon((x1, y1), (x2, y2), (x3, y3), ...)` (See more about [polygons](#Polygons))
 
@@ -54,7 +54,7 @@ You can add geometric shapes to a window.
 
 You can compute a position around an oval. (This does not draw the oval.)
 
-`window.ovalPoint((x, y), width, height, angle)` (The angle is in degrees, and measured clockwise from the north direction.)
+`window.ovalPoint((x, y), width, height, angle)` (The angle is measured clockwise in degrees from the north direction.)
 
 You can add more complex shapes to a window.
 
@@ -175,6 +175,43 @@ Some of its attributes are accessible (but not assignable).
 `oval.left oval.right` (Boundary x-values)
 
 `oval.top oval.bottom` (Boundary y-values)
+
+### Arcs
+
+Once you have added an arc shape to a window, you can manipulate it as follows.
+
+You can give it a color.
+
+`arc.fill(color)` (See more about [colors](#Fonts-and-Colors))
+
+You can change the width or color of its border.
+
+`arc.border(width, color)` (See more about [colors](#Fonts-and-Colors))
+
+You can change its location and size.
+
+`arc.relocate( (x, y) )` (The shape is relocated to (x, y).)
+
+`arc.scale(horizontalScale, verticalScale)` (horizontalScale and verticalScale are in decimal (for example, 0.5 for 50%).)
+
+`arc.move(dx, dy)` (The shape is moved by displacements specified by dx and dy.)
+
+You can rotate it clockwise (positive angle in degrees) or counterclockwise (negative angle in degrees).
+
+`arc.rotate(angle)`
+
+You can ask whether it overlaps with another shape in the window.
+
+`if arc.overlaps(shape):`
+
+Some of its attributes are accessible (but not assignable).
+
+`arc.width oval.height` (Dimensions of a bounding box)
+
+`arc.left arc.right` (Boundary x-values)
+
+`arc.top arc.bottom` (Boundary y-values)
+
 
 ### Polygons
 
