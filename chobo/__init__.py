@@ -112,7 +112,7 @@ class window:
             return
 
         if interval not in self.timerFunctions:
-            self.timerFunctions[interval] = {"lastRun":0, "functions":[]}
+            self.timerFunctions[interval] = {"lastRun":self.tick, "functions":[]}
         if timerFunc not in self.timerFunctions[interval]["functions"]:
             self.timerFunctions[interval]["functions"].append(timerFunc)
 

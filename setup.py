@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
         name="chobo",
-        version="0.99.2",
+        version="0.99.3",
         packages=setuptools.find_packages(),
         description="A Python package for graphical displays",
         long_description=long_description,
