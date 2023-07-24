@@ -1004,6 +1004,7 @@ class image(pointshape):
         if filename is not None:
             self.img = pygame.image.load(filename)
             self.original = pygame.image.load(filename)
+            self.scaledImage = pygame.image.load(filename)
         super().__init__(x, y)
         self.rotation = 0
 
@@ -1023,8 +1024,11 @@ class image(pointshape):
         if angle == 0:
             return
         self.rotation += angle
+
         del self.img
-        self.img = pygame.transform.rotate(self.original, -self.rotation)
+        self.img = pygame.transform.rotate(self.scaledImage, -self.rotation)
+
+        self.configure(self.x, self.y)
 
     def scale(self, horizontalScale=None, verticalScale=None, *extra):
         command = self.__class__.__name__ + ".scale(horizonScale,verticalScale)"
@@ -1037,12 +1041,11 @@ class image(pointshape):
         if horizontalScale <= 0 or verticalScale <= 0:
             return system.invalid("scales ", (horizontalScale, verticalScale))
 
-        del self.img
-        self.img = pygame.transform.rotate(self.original, -self.rotation)
-        self.img = pygame.transform.scale(self.img, (horizontalScale * self.img.get_width(), verticalScale * self.img.get_height()))
-        del self.original
-        self.original = self.img
-        self.rotation = 0
+        del self.scaledImage
+        self.scaledImage = pygame.transform.scale(self.original, (horizontalScale * self.original.get_width(), verticalScale * self.original.get_height()))
+        if self.rotation != 0:
+            del self.img
+            self.img = pygame.transform.rotate(self.scaledImage, -self.rotation)
 
         self.configure(self.x, self.y)
 
