@@ -1023,9 +1023,7 @@ class image(pointshape):
         self.rotation += angle
         del self.img
         self.img = pygame.transform.rotate(self.original, -self.rotation)
-#        x = self.x + self.__dict__["width"] / 2 - self.img.get_width() / 2
-#        y = self.y + self.__dict__["height"] / 2 - self.img.get_height() / 2
-        self.configure(x, y)
+        self.configure(self.x, self.y)
 
     def getColor(self, pos=None, *extra):
         """Retrieve the (r,g,b) color at pixel x,y of the image."""
