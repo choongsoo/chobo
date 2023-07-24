@@ -793,22 +793,24 @@ class listshape(windowshape):
 
         self.move(dx, dy)
 
-    def scale(self, horizonScale=None, verticalScale=None, *extra):
+    def scale(self, horizontalScale=None, verticalScale=None, *extra):
         """Scale this shape by the given horizontal and vertical scale."""
         command = self.__class__.__name__ + ".scale(horizonScale,verticalScale)"
 
         # Argument existence
         if len(extra) > 0:
             return system.extra(command)
-        if horizonScale is None or verticalScale is None:
+        if horizontalScale is None or verticalScale is None:
             return system.missing(command)
+        if horizontalScale <= 0 or verticalScale <= 0:
+            return system.invalid("scales ", (horizontalScale, verticalScale))
 
         newPoints = []
         for index in range(len(self.points)):
             x, y = self.points[index]
             dx = x - self.x
             dy = y - self.y
-            newx = dx * horizonScale
+            newx = dx * horizontalScale
             newy = dy * verticalScale
 
             newx += x
@@ -1023,6 +1025,25 @@ class image(pointshape):
         self.rotation += angle
         del self.img
         self.img = pygame.transform.rotate(self.original, -self.rotation)
+
+    def scale(self, horizontalScale=None, verticalScale=None, *extra):
+        command = self.__class__.__name__ + ".scale(horizonScale,verticalScale)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if horizontalScale is None or verticalScale is None:
+            return system.missing(command)
+        if horizontalScale <= 0 or verticalScale <= 0:
+            return system.invalid("scales ", (horizontalScale, verticalScale))
+
+        del self.img
+        self.img = pygame.transform.rotate(self.original, -self.rotation)
+        self.img = pygame.transform.scale(self.img, (horizontalScale * self.img.get_width(), verticalScale * self.img.get_height()))
+        del self.original
+        self.original = self.img
+        self.rotation = 0
+
         self.configure(self.x, self.y)
 
     def getColor(self, pos=None, *extra):
@@ -1077,7 +1098,6 @@ class image(pointshape):
         self.original.set_at( (x, y), (r, g, b, 255))
 
         self.img = self.original
-        self.rotate(self.rotation)
 
     def saveAs(self, filename=None, *extra):
         """Save this image to a file."""
