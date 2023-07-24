@@ -84,7 +84,11 @@ You can arrange for functions to be called repeatedly, and to stop being called.
 
 You can arrange for functions to be triggered by keyboard events, and to stop being triggered.
 
-`window.onKeyPress(function)` (Function must expect one argument (key) indicating which key was pressed.)
+`window.onKeyType(function)` (Function must expect one argument (key) indicating which key was typed (pressed and released).)
+
+`window.offKeyType(function)`
+
+`window.onKeyPress(function)` (Function must expect one argument (key) indicating which key is pressed.)
 
 `window.offKeyPress(function)`
 
