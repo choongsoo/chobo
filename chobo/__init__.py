@@ -89,7 +89,7 @@ class window:
 
         self.timerFunctions = {}
 
-        self.keyFunctions = []
+        self.typedKeyFunctions = set()
 
         self.mouseClickFunctions = {}
         self.mouseDragFunctions = {}
@@ -248,11 +248,14 @@ class window:
                     running = False
                 elif event.type == pygame.KEYDOWN and pygame.key.get_focused():
                     pressedKey = self.translateKey(event.key)
+                    self.pressedKeys.add(pressedKey)
                     if DEBUG:
                         print(pressedKey)
-                    if len(self.keyFunctions) > 0:
-                        for aFunction in self.keyFunctions:
-                            aFunction(pressedKey)
+                elif event.type == pygame.KEYUP and pygame.key.get_focused():
+                    pressedKey = self.translateKey(event.key)
+                    self.pressedKeys.remove(pressedKey)
+                    for aFunction in self.typedKeyFunctions:
+                        aFunction(pressedKey)
                 elif pygame.mouse.get_focused():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.mouseDown[event.button] = True
@@ -272,15 +275,12 @@ class window:
                                 for aFunction in dragFunctions[:]:
                                     aFunction(x, y)
 
-            # refresh drawing
-
             # set the background color
             self.screen.fill(self.background)
 
             # draw all the shapes
             for aShape in self.shapes:
                 aShape.__draw__()
-
 
             # force an update
             pygame.display.flip()
@@ -294,12 +294,11 @@ class window:
                     self.timerFunctions[interval]["lastRun"] = self.tick
                     for aFunction in self.timerFunctions[interval]["functions"][:]:
                         aFunction()
-
         pygame.quit()
 
-    def onKeyPress(self, keyFunc=None, *extra):
-        """Assign a function to handle key presses."""
-        command = "window.onKeyPress(function)"
+    def onKeyType(self, keyFunc=None, *extra):
+        """Assign a function to handle key types."""
+        command = "window.onKeyType(function)"
 
         # Argument existence
         if len(extra) > 0:
@@ -308,12 +307,12 @@ class window:
             system.missing(command)
             return
 
-        if keyFunc not in self.keyFunctions:
-            self.keyFunctions.append(keyFunc)
+        if keyFunc not in self.typedKeyFunctions:
+            self.typedKeyFunctions.add(keyFunc)
 
-    def offKeyPress(self, keyFunc=None, *extra):
-        """Unassign a function to handle mouse drags."""
-        command = "window.offKeyPress(function)"
+    def offKeyType(self, keyFunc=None, *extra):
+        """Unassign a function to handle key types."""
+        command = "window.offKeyType(function)"
 
         # Argument existence
         if len(extra) > 0:
@@ -322,8 +321,8 @@ class window:
             system.missing(command)
             return
 
-        if keyFunc in self.keyFunctions:
-            self.keyFunctions.remove(keyFunc)
+        if keyFunc in self.typedKeyFunctions:
+            self.typedKeyFunctions.remove(keyFunc)
 
     def fill(self, color=None, *extra):
         """Give the window a background color."""
