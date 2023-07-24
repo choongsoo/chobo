@@ -89,11 +89,14 @@ class window:
 
         self.timerFunctions = {}
 
+        self.pressedKeys = set()
         self.typedKeyFunctions = set()
+        self.pressedKeyFunctions = set()
 
         self.mouseClickFunctions = {}
         self.mouseDragFunctions = {}
         self.mouseDown = {}
+
 
         sys.window = self
 
@@ -151,10 +154,10 @@ class window:
             return
 
         if buttonID not in self.mouseClickFunctions:
-            self.mouseClickFunctions[buttonID] = []
+            self.mouseClickFunctions[buttonID] = set()
 
         if clickFunc not in self.mouseClickFunctions[buttonID]:
-            self.mouseClickFunctions[buttonID].append(clickFunc)
+            self.mouseClickFunctions[buttonID].add(clickFunc)
 
     def offMouseClick(self, buttonID, clickFunc, *extra):
         """Unassign a function to handle mouse button clicks."""
@@ -175,7 +178,7 @@ class window:
             system.invalid("buttonID", buttonID)
             return
 
-        if clickFunc in self.mouseClickFunctions.get(buttonID, []):
+        if clickFunc in self.mouseClickFunctions.get(buttonID, set()):
             self.mouseClickFunctions[buttonID].remove(clickFunc)
 
     def onMouseDrag(self, buttonID, dragFunc, *extra):
@@ -198,10 +201,10 @@ class window:
             return
 
         if buttonID not in self.mouseDragFunctions:
-            self.mouseDragFunctions[buttonID] = []
+            self.mouseDragFunctions[buttonID] = set()
 
         if dragFunc not in self.mouseDragFunctions[buttonID]:
-            self.mouseDragFunctions[buttonID].append(dragFunc)
+            self.mouseDragFunctions[buttonID].add(dragFunc)
 
     def offMouseDrag(self, buttonID, dragFunc, *extra):
         """Unassign a function to handle mouse drags."""
@@ -222,7 +225,7 @@ class window:
             system.invalid("buttonID", buttonID)
             return
 
-        if dragFunc in self.mouseDragFunctions.get(buttonID, []):
+        if dragFunc in self.mouseDragFunctions.get(buttonID, set()):
             self.mouseDragFunctions[buttonID].remove(dragFunc)
 
     def translateKey(self, key):
@@ -275,6 +278,10 @@ class window:
                                 for aFunction in dragFunctions[:]:
                                     aFunction(x, y)
 
+            for pressedKey in self.pressedKeys:
+                for aFunction in self.pressedKeyFunctions:
+                    aFunction(pressedKey)
+
             # set the background color
             self.screen.fill(self.background)
 
@@ -285,7 +292,7 @@ class window:
             # force an update
             pygame.display.flip()
 
-            #iwait for the interval
+            # wait for the interval
             self.tick += self.clock.tick(self.fps)
 
             # call all the timer functions
@@ -307,8 +314,7 @@ class window:
             system.missing(command)
             return
 
-        if keyFunc not in self.typedKeyFunctions:
-            self.typedKeyFunctions.add(keyFunc)
+        self.typedKeyFunctions.add(keyFunc)
 
     def offKeyType(self, keyFunc=None, *extra):
         """Unassign a function to handle key types."""
@@ -323,6 +329,33 @@ class window:
 
         if keyFunc in self.typedKeyFunctions:
             self.typedKeyFunctions.remove(keyFunc)
+
+    def onKeyPress(self, keyFunc=None, *extra):
+        """Assign a function to handle key presses."""
+        command = "window.onKeyType(function)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if keyFunc is None:
+            system.missing(command)
+            return
+
+        self.pressedKeyFunctions.add(keyFunc)
+
+    def offKeyPress(self, keyFunc=None, *extra):
+        """Unassign a function to handle key presses."""
+        command = "window.offKeyType(function)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if keyFunc is None:
+            system.missing(command)
+            return
+
+        if keyFunc in self.pressedKeyFunctions:
+            self.pressedKeyFunctions.remove(keyFunc)
 
     def fill(self, color=None, *extra):
         """Give the window a background color."""
