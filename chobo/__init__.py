@@ -677,7 +677,7 @@ class window:
         # convert from degrees to radians
         angle = math.radians(angle)
 
-        return (x + width * math.sin(angle) + width, y - height * math.cos(angle) + height)
+        return (x + width * math.sin(angle), y - height * math.cos(angle))
 
 class windowshape:
     def __init__(self):
@@ -715,32 +715,30 @@ class listshape(windowshape):
     # Update the shape location.
     def configure(self, points):
         self.points = points
-        self.x = min(x for (x,y) in points)
-        self.y = min(y for (x,y) in points)
         self.__dict__["left"] = min(x for (x,y) in points)
         self.__dict__["top"] = min(y for (x,y) in points)
         self.__dict__["right"] = max(x for (x,y) in points)
         self.__dict__["bottom"] = max(y for (x,y) in points)
         self.__dict__["width"] = self.__dict__["right"] - self.__dict__["left"]
         self.__dict__["height"] = self.__dict__["bottom"] - self.__dict__["top"]
-        self.rect = pygame.Rect(self.x, self.y, self.__dict__["width"], self.__dict__["height"])
+        self.rect = pygame.Rect(self.__dict__["left"], self.__dict__["top"], self.__dict__["width"], self.__dict__["height"])
+
+        self.x = (self.__dict__["left"] + self.__dict__["right"]) // 2
+        self.y = (self.__dict__["top"] + self.__dict__["bottom"]) // 2
 
     def rotate(self, angle):
         angle = math.radians(angle)
 
-        cx = self.__dict__["left"] + self.__dict__["width"] / 2
-        cy = self.__dict__["top"] + self.__dict__["height"] / 2
-
         newPoints = []
         for index in range(len(self.points)):
             x, y = self.points[index]
-            dx = x - cx
-            dy = y - cy
+            dx = x - self.x
+            dy = y - self.y
             newx = dx * math.cos(angle) - dy * math.sin(angle)
             newy = dy * math.cos(angle) + dx * math.sin(angle)
 
-            newx += cx
-            newy += cy
+            newx += self.x
+            newy += self.y
             newPoints.append((newx, newy))
         self.configure(newPoints)
 
@@ -788,9 +786,8 @@ class listshape(windowshape):
         # Argument types
         try:
             x, y = pos
-            sx, sy = self.__dict__["left"], self.__dict__["top"]
-            dx = int(x) - sx
-            dy = int(y) - sy
+            dx = int(x) - self.x
+            dy = int(y) - self.y
         except ValueError:
             return system.invalid("new location", pos)
 
@@ -809,13 +806,13 @@ class listshape(windowshape):
         newPoints = []
         for index in range(len(self.points)):
             x, y = self.points[index]
-            dx = x - self.__dict__["left"]
-            dy = y - self.__dict__["top"]
+            dx = x - self.x
+            dy = y - self.y
             newx = dx * horizonScale
             newy = dy * verticalScale
 
-            newx += self.__dict__["left"]
-            newy += self.__dict__["top"]
+            newx += x
+            newy += y
             newPoints.append((newx, newy))
         self.configure(newPoints)
 
@@ -913,14 +910,13 @@ class polygon(lines):
 class rectangle(polygon):
     """A polygon shape."""
     def __init__(self, x, y, width, height):
-        points = [(x, y), (x + width, y), (x + width, y + height), (x, y + height)]
+        points = [(x - width / 2, y - height / 2), (x + width / 2, y - height / 2), (x + width / 2, y + height / 2),  (x - width / 2, y + height / 2)]
         super().__init__(points)
 
 class arc(polygon):
     """An arc shape."""
 
     def __init__(self, x, y, width, height, beginAngle, arcAngle):
-#        self.id = canvas.create_oval(0, 0, 0, 0, width=1)
         points = []
 
         a = max(1, int(width / 2))
@@ -931,12 +927,10 @@ class arc(polygon):
         if arcAngle == 0:
             arcAngle = 360
         else:
-            points.append((x + a, y + b))
+            points.append((x, y))
 
         for i in range(beginAngle, beginAngle + arcAngle + 1):
             points.append(sys.window.ovalPoint( (x, y), width, height, i))
-
-        # points = [(v + x + a, w + y + b) for (v, w) in points]
 
         super().__init__(points)
 
@@ -1015,12 +1009,12 @@ class image(pointshape):
     def configure(self, x, y):
         self.x = x
         self.y = y
-        self.__dict__["left"] = x
-        self.__dict__["top"] = y
         self.__dict__["width"] = self.img.get_width()
         self.__dict__["height"] = self.img.get_height()
-        self.__dict__["right"] = x + self.img.get_width()
-        self.__dict__["bottom"] = y + self.img.get_height()
+        self.__dict__["left"] = self.x - self.__dict__["width"] // 2
+        self.__dict__["top"] = self.y - self.__dict__["height"] // 2
+        self.__dict__["right"] = self.x + self.__dict__["width"] // 2
+        self.__dict__["bottom"] = self.y + self.__dict__["height"] // 2
         self.__dict__["rect"] = self.getRect()
 
     def rotate(self, angle):
@@ -1029,8 +1023,8 @@ class image(pointshape):
         self.rotation += angle
         del self.img
         self.img = pygame.transform.rotate(self.original, -self.rotation)
-        x = self.x + self.__dict__["width"] / 2 - self.img.get_width() / 2
-        y = self.y + self.__dict__["height"] / 2 - self.img.get_height() / 2
+#        x = self.x + self.__dict__["width"] / 2 - self.img.get_width() / 2
+#        y = self.y + self.__dict__["height"] / 2 - self.img.get_height() / 2
         self.configure(x, y)
 
     def getColor(self, pos=None, *extra):
@@ -1100,7 +1094,7 @@ class image(pointshape):
         pygame.image.save(self.img, str(filename))
 
     def getRect(self):
-        return pygame.Rect(self.x, self.y, self.img.get_width(), self.img.get_height())
+        return pygame.Rect(self.x - self.img.get_width() // 2, self.y - self.img.get_height() // 2, self.img.get_width(), self.img.get_height())
 
     def __draw__(self):
         self.rect = sys.window.screen.blit(self.img, self.getRect())
