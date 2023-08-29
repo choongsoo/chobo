@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "chobo"
 version = "0.99.5"
 authors = [
-  { name="Choong-Soo Lee", email="clee@stlawu.edu" },
+  { name="Choong-Soo Lee", email="choongsoo.lee@gmail.com" },
 ]
 description = "A Python package for graphical displays"
 readme = "README.md"
@@ -16,7 +16,17 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+  'pygame >= 2.5.0',
+]
 
 [project.urls]
 "Homepage" = "https://github.com/choongsoo/chobo"
 "Bug Tracker" = "https://github.com/choongsoo/chobo/issues"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["chobo*"]
+exclude = ["doc*", "tests*"]
