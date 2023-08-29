@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0", "pygame>=2.0.0"]
+requires = ["setuptools>=61.0", "pygame>=2.5.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "chobo"
-version = "0.99.5"
+version = "0.99.6"
 authors = [
   { name="Choong-Soo Lee", email="choongsoo.lee@gmail.com" },
 ]
