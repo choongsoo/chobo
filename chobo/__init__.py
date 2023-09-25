@@ -82,7 +82,7 @@ class window:
 
         self.clock = pygame.time.Clock()
 
-        self.fps = 200
+        self.fps = 50
         self.tick = 0
 
         self.shapes = []
