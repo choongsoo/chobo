@@ -275,7 +275,7 @@ class window:
                             if self.mouseDown.get(mouseButton, False):
                                 dragFunctions = self.mouseDragFunctions.get(mouseButton, [])
                                 x, y = event.pos
-                                for aFunction in dragFunctions[:]:
+                                for aFunction in dragFunctions:
                                     aFunction(x, y)
 
             for pressedKey in self.pressedKeys:
