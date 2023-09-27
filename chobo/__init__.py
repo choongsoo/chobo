@@ -1135,7 +1135,7 @@ class text(pointshape):
 
     def __init__(self, x, y, message):
         super().__init__(x, y)
-        self.message = message
+        self.message = str(message)
         self.font = pygame.font.SysFont(pygame.font.get_default_font(), 16)
         self.color = (0, 0, 0)
         self.__render__()
@@ -1160,7 +1160,7 @@ class text(pointshape):
         if len(extra) > 0:
             return system.extra(command)
 
-        self.message = message
+        self.message = str(message)
         self.__render__()
 
     def __render__(self):
