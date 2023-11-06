@@ -257,29 +257,29 @@ class window:
                 elif event.type == pygame.KEYUP and pygame.key.get_focused():
                     pressedKey = self.translateKey(event.key)
                     self.pressedKeys.remove(pressedKey)
-                    for aFunction in self.typedKeyFunctions:
+                    for aFunction in self.typedKeyFunctions.copy():
                         aFunction(pressedKey)
                 elif pygame.mouse.get_focused():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         self.mouseDown[event.button] = True
-                        clickFunctions = self.mouseClickFunctions.get(event.button, [])
+                        clickFunctions = self.mouseClickFunctions.get(event.button, set())
                         x, y = event.pos
                         if DEBUG:
                             print(event.button, (x, y))
-                        for aFunction in clickFunctions:
+                        for aFunction in clickFunctions.copy():
                             aFunction(x, y)
                     elif event.type == pygame.MOUSEBUTTONUP:
                         self.mouseDown[event.button] = False
                     elif event.type == pygame.MOUSEMOTION:
                         for mouseButton in dict(self.mouseDragFunctions):
                             if self.mouseDown.get(mouseButton, False):
-                                dragFunctions = self.mouseDragFunctions.get(mouseButton, [])
+                                dragFunctions = self.mouseDragFunctions.get(mouseButton, set())
                                 x, y = event.pos
-                                for aFunction in dragFunctions:
+                                for aFunction in dragFunctions.copy():
                                     aFunction(x, y)
 
             for pressedKey in self.pressedKeys:
-                for aFunction in self.pressedKeyFunctions:
+                for aFunction in self.pressedKeyFunctions.copy():
                     aFunction(pressedKey)
 
             # set the background color
