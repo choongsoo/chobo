@@ -85,7 +85,7 @@ class window:
         self.fps = 50
         self.tick = 0
 
-        self.shapes = []
+        self.shapes = {}
 
         self.timerFunctions = {}
 
@@ -286,8 +286,11 @@ class window:
             self.screen.fill(self.background)
 
             # draw all the shapes
-            for aShape in self.shapes:
-                aShape.__draw__()
+            zIndices = list(self.shapes.keys())
+            zIndices.sort()
+            for zIndex in zIndices:
+                for aShape in self.shapes[zIndex]:
+                    aShape.__draw__()
 
             # force an update
             pygame.display.flip()
@@ -389,7 +392,7 @@ class window:
                 return system.invalid("(x,y) point", point)
 
         shape = polygon(tuple(pointlist))
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def line(self, *points):
@@ -412,7 +415,7 @@ class window:
                 return system.invalid("(x, y) point", point)
 
         shape = lines(tuple(pointlist))
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def rectangle(self, pos=None, width=None, height=None, *extra):
@@ -444,7 +447,7 @@ class window:
             return system.invalid("rectangle dimensions", (width, height))
 
         shape = rectangle(x, y, width, height)
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def oval(self, pos=None, width=None, height=None, *extra):
@@ -474,7 +477,7 @@ class window:
             return system.invalid("oval dimensions", (width, height))
 
         shape = oval(x, y, width, height)
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def arc(self, pos=None, width=None, height=None, beginAngle=None, arcAngle=None, *extra):
@@ -512,7 +515,7 @@ class window:
             return system.invalid("arc angles", (beginAngle, arcAngle))
 
         shape = arc(x, y, width, height, beginAngle, arcAngle)
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def text(self, pos=None, message=None, *extra):
@@ -534,7 +537,7 @@ class window:
             return system.invalid("text location", (x, y))
 
         shape = text(x, y, str(message))
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def image(self, pos=None, filename=None, *extra):
@@ -556,7 +559,7 @@ class window:
             return system.invalid("image location", (x, y))
 
         shape = image(x, y, str(filename))
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def emptyimage(self, pos=None, width=None, height=None, *extra):
@@ -584,7 +587,7 @@ class window:
             return system.invalid("image width and height", (width, height))
 
         shape = emptyimage(x, y, width, height)
-        self.shapes.append(shape)
+        self.shapes[shape.getZIndex()] = self.shapes.get(shape.getZIndex(), []) + [shape]
         return shape
 
     def soundfx(self, filename=None, *extra):
@@ -635,7 +638,7 @@ class window:
         if not isinstance(shape, windowshape):
             return system.invalid("shape", shape)
 
-        self.shapes.remove(shape)
+        self.shapes[shape.getZIndex()].remove(shape)
 
     def ovalPoint(self, pos=None, width=None, height=None, angle=None, *extra):
         """Compute a point at an angle on an oval with the given position, width, and height."""
@@ -682,6 +685,16 @@ class window:
 class windowshape:
     def __init__(self):
         self.rect = None
+        self.__zIndex__ = 0
+
+    def getZIndex(self):
+        return self.__zIndex__
+
+    def setZIndex(self, newZIndex):
+        oldZIndex = self.getZIndex()
+        self.__zIndex__ = newZIndex
+        sys.window.shapes[oldZIndex].remove(self)
+        sys.window.shapes[newZIndex] = sys.window.shapes.get(newZIndex, []) + [self]
 
     def getRect(self):
         return self.rect
