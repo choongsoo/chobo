@@ -734,7 +734,7 @@ class listshape(windowshape):
         self.__dict__["bottom"] = max(y for (x,y) in points)
         self.__dict__["width"] = self.__dict__["right"] - self.__dict__["left"]
         self.__dict__["height"] = self.__dict__["bottom"] - self.__dict__["top"]
-        self.rect = pygame.Rect(self.__dict__["left"], self.__dict__["top"], self.__dict__["width"], self.__dict__["height"])
+        self.rect = pygame.Rect(self.__dict__["left"], self.__dict__["top"], max(1, self.__dict__["width"]), max(1, self.__dict__["height"]))
 
         self.x = (self.__dict__["left"] + self.__dict__["right"]) // 2
         self.y = (self.__dict__["top"] + self.__dict__["bottom"]) // 2
