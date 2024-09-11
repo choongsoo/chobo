@@ -95,8 +95,9 @@ class window:
 
         self.mouseClickFunctions = {}
         self.mouseDragFunctions = {}
+        self.mouseHoverFunctions = set()
+        self.mouseMoveFunctions = set()
         self.mouseDown = {}
-
 
         sys.window = self
 
@@ -133,6 +134,64 @@ class window:
         for interval in self.timerFunctions:
             if timerFunc in self.timerFunctions[interval]["functions"]:
                 self.timerFunctions[interval]["functions"].remove(timerFunc)
+
+    def onMouseHover(self, hoverFunc, *extra):
+        """Assign a function to handle mouse hover events."""
+        command = "window.onMouseHover(function)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if hoverFunc is None:
+            system.missing(command)
+            return
+
+        if hoverFunc not in self.mouseHoverFunctions:
+            self.mouseHoverFunctions.add(hoverFunc)
+
+    def offMouseHover(self, hoverFunc, *extra):
+        """Unassign a function to handle mouse hover events."""
+        command = "window.offMouseHover(function)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if hoverFunc is None:
+            system.missing(command)
+            return
+
+        if hoverFunc in self.mouseHoverFunctions:
+            self.mouseHoverFunctions.remove(hoverFunc)
+
+
+    def onMouseMove(self, moveFunc, *extra):
+        """Assign a function to handle mouse move events."""
+        command = "window.onMouseMove(function)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if moveFunc is None:
+            system.missing(command)
+            return
+
+        if moveFunc not in self.mouseMoveFunctions:
+            self.mouseMoveFunctions.add(moveFunc)
+
+    def offMouseMove(self, moveFunc, *extra):
+        """Unassign a function to handle mouse move events."""
+        command = "window.offMouseMove(function)"
+
+        # Argument existence
+        if len(extra) > 0:
+            return system.extra(command)
+        if moveFunc is None:
+            system.missing(command)
+            return
+
+        if moveFunc in self.mouseMoveFunctions:
+            self.mouseMoveFunctions.remove(moveFunc)
+
 
     def onMouseClick(self, buttonID, clickFunc, *extra):
         """Assign a function to handle mouse button clicks."""
@@ -277,6 +336,17 @@ class window:
                                 x, y = event.pos
                                 for aFunction in dragFunctions.copy():
                                     aFunction(x, y)
+
+            x, y = pygame.mouse.get_pos()
+
+            for aFunction in self.mouseHoverFunctions.copy():
+                aFunction(x, y)
+
+            dx, dy = pygame.mouse.get_rel()
+
+            if dx != 0 or dy != 0:
+                for aFunction in self.mouseMoveFunctions.copy():
+                    aFunction(x, y)
 
             for pressedKey in self.pressedKeys:
                 for aFunction in self.pressedKeyFunctions.copy():
